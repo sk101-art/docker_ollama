@@ -14,7 +14,7 @@ def chat():
             break
 
         payload = {
-            "model": "llama3.2:1b",
+            "model": "qwen2.5:0.5b",
             "prompt": user_input,
             "stream": False
         }
