@@ -1,0 +1,31 @@
+services:
+  # Service 1: The AI Engine
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-engine
+    # Change this line in your docker-compose.yml
+    ports:
+    - "11435:11434"  # Windows port 11435 maps to Container port 11434
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Service 2: Your Project Code
+  app:
+    build: .
+    container_name: my-python-app
+    depends_on:
+      - ollama
+    tty: true
+    stdin_open: true
+    environment:
+      - OLLAMA_HOST=http://ollama-engine:11434
+
+volumes:
+  ollama_data:
